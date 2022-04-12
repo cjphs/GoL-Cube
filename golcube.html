@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<style>
+    body {
+        background-color: black;
+    }
+
+    div.mainbox {
+        position: relative;
+    }
+
+    div.toolbar {
+        position: absolute;
+        right: 0;
+        top: 5px;
+        color: white;
+        font-family:'Courier New', Courier, monospace;
+        height:60px;  
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<html>
+    <body>
+        <script src="js-modules/three.js"></script>
+        <script src="js-modules/Array2D.js"></script>
+
+        <!-- Canvases for the cube faces -->
+        <canvas id="canvas_up"      width=100 height="100"></canvas>
+        <canvas id="canvas_north"   width=100 height="100"></canvas>
+        <canvas id="canvas_east"    width=100 height="100"></canvas>
+        <canvas id="canvas_south"   width=100 height="100"></canvas>
+        <canvas id="canvas_west"    width=100 height="100"></canvas>
+        <canvas id="canvas_down"    width=100 height="100"></canvas>
+        
+        <div class='mainbox'>
+            <div class="toolbar">
+                Update speed:
+                <input type="range" min="5" max="60" value="15" class="slider" id="update_speed" style="top:40px"></input>
+            </div>
+        
+        <script src="golcube.js">
+            
+        </script>
+    </div>
+
+
+    </body>
+</html>
