@@ -1,48 +1,65 @@
 <!DOCTYPE html>
 <style>
     body {
-        background-color: black;
+        background-color: white;
+        font-family:'Courier New', Courier, monospace;
+        color:white;
     }
+
+    selector { cursor: none; }
 
     div.mainbox {
         position: relative;
+        color: red;
+    }
+
+    div.guide {
+        position:absolute;
+        bottom:0;
+        z-index:10;
     }
 
     div.toolbar {
         position: absolute;
         right: 0;
         top: 5px;
-        color: white;
-        font-family:'Courier New', Courier, monospace;
         height:60px;  
         display: flex;
         align-items: center;
+        z-index:10;
+    }
+    
+    canvas {
+        display:block;
     }
 </style>
 
 <html>
     <body>
-        <script src="js-modules/three.js"></script>
+        <!-- I suck at web stuff lol so idk if there's a better way to do this -->
+        <canvas id="canvas_up"      width=100 height=100 style="display:none;"></canvas>
+        <canvas id="canvas_north"   width=100 height=100 style="display:none;"></canvas>
+        <canvas id="canvas_east"    width=100 height=100 style="display:none;"></canvas>
+        <canvas id="canvas_south"   width=100 height=100 style="display:none;"></canvas>
+        <canvas id="canvas_west"    width=100 height=100 style="display:none;"></canvas>
+        <canvas id="canvas_down"    width=100 height=100 style="display:none;"></canvas>
+   
+                <div class="toolbar">
+                    <button type="button" id="playbutton">Play</button>&nbsp  
+                    <button type="button" id="stepbutton">Step</button>&nbsp
+                    <button type="button" id="clearbutton">Clear cube</button> &nbsp |
+                    Update speed:  
+                    <input type="range" min="5" max="60" value="45" class="slider" id="update_speed" style="top:40px"></input>&nbsp
+                </div>
+        
         <script src="js-modules/Array2D.js"></script>
+        <script src="js-modules/three.js"></script>
+        <script type="module" src="golcube.js"></script>
 
-        <!-- Canvases for the cube faces -->
-        <canvas id="canvas_up"      width=100 height="100"></canvas>
-        <canvas id="canvas_north"   width=100 height="100"></canvas>
-        <canvas id="canvas_east"    width=100 height="100"></canvas>
-        <canvas id="canvas_south"   width=100 height="100"></canvas>
-        <canvas id="canvas_west"    width=100 height="100"></canvas>
-        <canvas id="canvas_down"    width=100 height="100"></canvas>
-        
-        <div class='mainbox'>
-            <div class="toolbar">
-                Update speed:
-                <input type="range" min="5" max="60" value="15" class="slider" id="update_speed" style="top:40px"></input>
-            </div>
-        
-        <script src="golcube.js">
-            
-        </script>
-    </div>
+        <div class="guide">
+            GoLcube | Drag on background to rotate cube
+        </div>
+    <!-- </div> -->
 
 
     </body>
