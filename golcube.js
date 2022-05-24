@@ -28,7 +28,15 @@ const grid_colour_back = "navy"
 const grid_colour_back_lines = "blue"
 const grid_colour_alive = "lime"
 
+const grid_cells_cols = [
+    "navy",
+    "lime",
+    "green"
+]
+
 const TAU = Math.PI*2;
+
+let rule_set = "rules_gol";
 
 class Grid {
     grid = [];
@@ -89,15 +97,25 @@ class Grid {
             for(var c = 0; c < n; c++) {
                 let alive_cells = countNeighbors(neighbor_matrix, n + c, n + r, 1);
 
-                // Alive cells with 2 or 3 neighbors live on
-                if (this.grid[r][c] == 1)
-                    if (alive_cells == 2 || alive_cells == 3)
+                if (rule_set == "rules_gol") {
+                    // Alive cells with 2 or 3 neighbors live on
+                    if (this.grid[r][c] == 1)
+                        if (alive_cells == 2 || alive_cells == 3)
+                            next_state[r][c] = 1;
+                    
+                    // Dead cells with 3 neighbors become alive
+                    if (this.grid[r][c] == 0)
+                        if (alive_cells == 3) 
+                            next_state[r][c] = 1;
+
+                } else if (rule_set == "rules_brian") {
+                    if (this.grid[r][c] == 0 && alive_cells == 2)
                         next_state[r][c] = 1;
-                
-                // Dead cells with 3 neighbors become alive
-                if (this.grid[r][c] == 0)
-                    if (alive_cells == 3) 
-                        next_state[r][c] = 1;
+                    if (this.grid[r][c] == 1)
+                        next_state[r][c] = 2;
+                    if (this.grid[r][c] == 2)
+                        next_state[r][c] = 0;
+                }
 
                 if (this.grid[r][c] != next_state[r][c])
                     this.redraw_required = true;
@@ -192,7 +210,7 @@ const faces = [east,west,up,down,north,south];
 
 
 // Define each face's neighbors (rotations calculated by hand, there's probably a nicer way to do this)
-const A = 90;   // anti-clockwise
+const A =  90;  // anti-clockwise
 const C = -90;  // clockwise
 const F = 180;  // flip
 
@@ -241,8 +259,6 @@ function drawGrids2D() {
             ctx.canvas.height = size;
         }
 
-        ctx
-
         if (faces[i].redraw_required) {
             if (DEBUG)
                 console.log('redraw face ' + canvas_ids[i]);
@@ -253,10 +269,11 @@ function drawGrids2D() {
             
             for(var y = 0; y < n; y++) {
                 for(var x = 0; x < n; x++) {
-                    ctx.fillStyle = grid_colour_alive;
+                    var cell = faces[i].getGrid()[y][x];
+                    ctx.fillStyle = grid_cells_cols[cell];
                     ctx.strokeStyle = grid_colour_back_lines;
 
-                    if (faces[i].getGrid()[y][x] == 1) {
+                    if (faces[i].getGrid()[y][x] > 0) {
                         ctx.fillRect(x / n * size, y / n * size, size/n, size/n);
                     } else {
                         ctx.strokeRect(x / n * size, y / n * size, size/n, size/n);
@@ -292,11 +309,12 @@ const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerH
 
 const renderer = new THREE.WebGLRenderer({antialias: false});
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+
 renderer.domElement.style.position = 'absolute';
 renderer.domElement.style.left = 0;
 renderer.domElement.style.top = 0;
 
+document.body.appendChild(renderer.domElement);
 const materials = [
     new THREE.MeshStandardMaterial({map: canvas_textures[0]}), // East
     new THREE.MeshStandardMaterial({map: canvas_textures[1]}), // West
@@ -321,8 +339,9 @@ scene.add(light);
 
 cube.rotation.y = Math.PI/4;
 cube.rotation.x = Math.PI/6;
-
 camera.position.z = 2;
+
+let rotating_cube = false; // cube is currently being rotated by dragging the background
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -357,7 +376,7 @@ function update() {
 	// calculate objects intersecting the picking ray
 	const intersects = raycaster.intersectObjects( scene.children );
 
-    if (intersects[0] != null) {
+    if (!rotating_cube && intersects[0] != null) {
         prev_selected_face = selected_face;
         prev_selected_x = selected_x;
         prev_selected_y = selected_y;
@@ -385,13 +404,28 @@ function update() {
 update();
 
 
+function clearCube(reset_cam) {
+    faces.forEach(face => {
+
+        face.grid = Array2D.fill(face.grid, 0);
+        face.redraw_required = true;
+    })
+
+    if (reset_cam) {
+        cube.rotation.y = Math.PI/4;
+        cube.rotation.x = Math.PI/6;
+        camera.position.z = 2;
+    }
+}
+
+
 ///////////////
 // LISTENERS //
 ///////////////
 
 window.addEventListener('mousedown', e => {
     mouse_down = true;
-    if (selected_face != null) {
+    if (!rotating_cube && selected_face != null) {
         faces[selected_face].setCell(selected_x,selected_y,1);
         faces[selected_face].redraw_required = true;
         drawGrids2D();
@@ -400,7 +434,9 @@ window.addEventListener('mousedown', e => {
 
 window.addEventListener('mouseup', e => {
     mouse_down = false;
+    rotating_cube = false;
 });
+
 
 window.addEventListener('mousemove', e => {
     if (selected_face == null) {
@@ -414,6 +450,7 @@ window.addEventListener('mousemove', e => {
             cube.rotation.x = (cube.rotation.x) % (TAU);
             cube.rotation.y = (cube.rotation.y) % (TAU);
             
+            rotating_cube = true;
         }
     } else if (mouse_down) {
         faces[selected_face].setCell(selected_x,selected_y,1);
@@ -443,20 +480,24 @@ document.getElementById('playbutton').addEventListener("click", e => {
     pause_unpause();
 });
 
-document.getElementById('stepbutton').addEventListener("click", e => {
-    frame = 0;
-    paused = false;
-    updateGrids();
-    drawGrids2D();
-    paused = true;
-});
+// document.getElementById('stepbutton').addEventListener("click", e => {
+//     frame = 0;
+//     paused = false;
+//     updateGrids();
+//     drawGrids2D();
+//     paused = true;
+// });
 
 document.getElementById('clearbutton').addEventListener("click", e => {
-    faces.forEach(face => {
+    clearCube(false);
+});
 
-        face.grid = Array2D.fill(face.grid, 0);
-        face.redraw_required = true;
-    })
+const rule_sets_combobox = document.getElementById('rule_sets');
+
+rule_sets_combobox.addEventListener("change", e => {
+    rule_set = rule_sets_combobox.options[rule_sets_combobox.selectedIndex].value;
+    clearCube(true);
+    pause();
 });
 
 window.addEventListener('keydown', (event) => {

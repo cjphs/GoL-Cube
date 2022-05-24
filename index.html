@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <style>
     body {
-        background-color: white;
+        background-color: rgb(0, 0, 0);
         font-family:'Courier New', Courier, monospace;
         color:white;
     }
@@ -20,17 +20,32 @@
     }
 
     div.toolbar {
-        position: absolute;
-        right: 0;
-        top: 5px;
+        top: 10px;
         height:60px;  
-        display: flex;
+        display: inline-block;
+        position:absolute;
         align-items: center;
-        z-index:10;
+        z-index:20;
+        min-width:32%;
+        padding:10px;
+    }
+
+    input {
+        display: inline;
+        vertical-align: middle;
     }
     
     canvas {
         display:block;
+    }
+
+    a {
+        text-decoration: none;
+        color:dodgerblue
+    }
+
+    a:visited {
+        color:deeppink
     }
 </style>
 
@@ -44,23 +59,40 @@
         <canvas id="canvas_west"    width=100 height=100 style="display:none;"></canvas>
         <canvas id="canvas_down"    width=100 height=100 style="display:none;"></canvas>
    
-                <div class="toolbar">
-                    <button type="button" id="playbutton">Play</button>&nbsp  
-                    <button type="button" id="stepbutton">Step</button>&nbsp
-                    <button type="button" id="clearbutton">Clear cube</button> &nbsp |
-                    Update speed:  
-                    <input type="range" min="5" max="60" value="45" class="slider" id="update_speed" style="top:40px"></input>&nbsp
-                </div>
-        
+           
         <script src="js-modules/Array2D.js"></script>
         <script src="js-modules/three.js"></script>
         <script type="module" src="golcube.js"></script>
 
         <div class="guide">
-            GoLcube | Drag on background to rotate cube
+            <a href="https://christophersch.github.io/">christophersch.github.io</a> | 
+            <a href="https://github.com/christophersch/golcube">GitHub repo</a> | 
+            Drag on background to rotate cube
+        </div>
+
+    
+        <div>
+            <div class="toolbar">
+                <label for="rule_sets">Rule set :&nbsp</label>
+                <select name="rule_sets" id="rule_sets">
+                <option value="rules_gol">Game of Life</option>
+                <option value="rules_brian">Brian's Brain</option>
+                </select>
+            </div>
+
+                <div class="toolbar" style="left:33%">
+                    <center>
+                        <button type="button" id="playbutton">Play </button>
+                    </center>
+                </div>
+
+            <div class="toolbar" style="text-align:right;left:66%;height:10px">
+                <button type="button" id="clearbutton">Clear cube</button> &nbsp
+                Update speed:  
+                <input type="range" min="5" max="60" value="45" class="slider" id="update_speed"></input>&nbsp
+            </div>
+            
         </div>
     <!-- </div> -->
-
-
     </body>
 </html>
