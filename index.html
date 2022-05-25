@@ -7,7 +7,8 @@
 <style>
     body {
         background-color: rgb(0, 0, 0);
-        font-family:'Courier New', Courier, monospace;
+        font-family:monospace;
+        font-size:16px;
         color:white;
     }
 
@@ -22,6 +23,7 @@
         position:absolute;
         bottom:0;
         z-index:10;
+        padding:10px;
     }
 
     div.toolbar {
@@ -50,7 +52,38 @@
     }
 
     a:visited {
-        color:deeppink
+        color:rgb(89, 29, 255)
+    }
+
+    select {
+        background-color: rgb(6, 0, 87);
+        border-width:0px;
+        color:white;
+
+        font-family:monospace;
+        font-size:16px;
+
+        padding:4px;
+    }
+
+    button {
+        background-color: rgb(6, 0, 87);
+        border-width: 0px;
+        font-family:monospace;
+        font-size:16px;
+        padding:10px;
+        border-radius:5px;
+        color:white;
+        transition: 0.1s;
+    }
+
+    button:hover {
+        background-color: rgb(17, 0, 255);
+        transition: 0.1s;
+    }
+
+    button:active {
+        background-color:rgb(58, 120, 255);
     }
 </style>
 
@@ -87,7 +120,7 @@
 
                 <div class="toolbar" style="left:33%">
                     <center>
-                        <button type="button" id="playbutton">Play </button>
+                        <button type="button" id="playbutton">Play</button>
                     </center>
                 </div>
 
