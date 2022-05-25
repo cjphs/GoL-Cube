@@ -358,7 +358,7 @@ function update() {
         updateGrids();
     }
 
-    update_speed = 60 - document.getElementById('update_speed').value;
+    update_speed = 61 - document.getElementById('update_speed').value;
 
     if (cube.rotation.x + rot_vx < Math.PI/2 && cube.rotation.x + rot_vx > -Math.PI/2)
         cube.rotation.x += rot_vx;
