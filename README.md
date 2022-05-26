@@ -36,3 +36,4 @@ The corner cells of each face carry a slight loss of generality, as they only ha
 ## Libraries used:
 - [Three.js](https://threejs.org/) (cube rendering & mouse pointer raycasting)
 - [Array2D](https://github.com/matthewtoast/Array2D.js/) (grid rotations for updating along cube edges)
+
