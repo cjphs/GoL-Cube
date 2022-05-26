@@ -248,15 +248,6 @@ down.addNeighbor(3, south,      F );
 // TODO: don't draw sides that aren't visible
 //       current solution: lazy drawing (each grid has a redraw flag)
 
-const side_cols = [
-    "red",
-    "yellow",
-    "orange",
-    "fuchsia",
-    "lime",
-    "blue"
-]
-
 let size = 400;
 function drawGrids2D() {
     for(var i = 0; i < faces.length; i++) {
@@ -267,9 +258,6 @@ function drawGrids2D() {
             ctx.canvas.width = size;
             ctx.canvas.height = size;
         }
-
-        ctx.fillStyle = side_cols[i]
-        ctx.fillRect(0, 0, size, size)
 
 
         if (faces[i].redraw_required) {
