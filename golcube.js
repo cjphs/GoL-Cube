@@ -248,6 +248,15 @@ down.addNeighbor(3, south,      F );
 // TODO: don't draw sides that aren't visible
 //       current solution: lazy drawing (each grid has a redraw flag)
 
+const side_cols = [
+    "red",
+    "yellow",
+    "orange",
+    "fuchsia",
+    "lime",
+    "blue"
+]
+
 let size = 400;
 function drawGrids2D() {
     for(var i = 0; i < faces.length; i++) {
@@ -258,6 +267,10 @@ function drawGrids2D() {
             ctx.canvas.width = size;
             ctx.canvas.height = size;
         }
+
+        ctx.fillStyle = side_cols[i]
+        ctx.fillRect(0, 0, size, size)
+
 
         if (faces[i].redraw_required) {
             if (DEBUG)
@@ -329,13 +342,9 @@ const cube = new THREE.Mesh( geometry, materials );
 scene.add( cube );
 
 
-const amblight = new THREE.AmbientLight(0x0000ff,.08);
+const amblight = new THREE.AmbientLight(0xffffff,1);
 scene.add(amblight);
 
-const light = new THREE.DirectionalLight( 0xffffff, .9 );
-light.position.set(camera.position.x, camera.position.y, camera.position.z + 4);
-light.target = cube;
-scene.add(light);
 
 cube.rotation.y = Math.PI/4;
 cube.rotation.x = Math.PI/6;
