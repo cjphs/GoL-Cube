@@ -38,6 +38,8 @@ const TAU = Math.PI*2;
 
 let rule_set = "rules_gol";
 
+let draw_cell_selection = false;
+
 class Grid {
     grid = [];
     redraw_required = true;
@@ -285,7 +287,7 @@ function drawGrids2D() {
         }
 
         // Selection highlighter
-        if (canvas_ids[i] == canvas_ids[selected_face]) {
+        if (draw_cell_selection && canvas_ids[i] == canvas_ids[selected_face]) {
             ctx.strokeStyle = 'red';
             ctx.lineWidth = 3;
             ctx.strokeRect(selected_x / n * size, selected_y / n * size, size/n, size/n);
@@ -396,6 +398,7 @@ function update() {
     }
 
     renderer.render(scene, camera);
+    
     requestAnimationFrame(update);  
 }
 update();
@@ -436,6 +439,8 @@ window.addEventListener('mouseup', e => {
 
 
 window.addEventListener('mousemove', e => {
+    draw_cell_selection = true;
+    
     if (selected_face == null) {
         if (prev_mx != Infinity && mouse_down && e.y > 60) {
             let dx = e.x - prev_mx;
